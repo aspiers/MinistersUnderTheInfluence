@@ -23,13 +23,12 @@ const defaultState = {
 };
 
 export function aboutReducer(state = defaultState, {type}) {
-  let newState = Object.assign({}, state);
-
   switch (type) {
     case actionTypes.TOGGLE_ABOUT:
+      let newState = Object.assign({}, state);
       newState.showAboutScreen = !newState.showAboutScreen;
       return newState;
     default:
-      return newState;
+      return state;
   }
 }
