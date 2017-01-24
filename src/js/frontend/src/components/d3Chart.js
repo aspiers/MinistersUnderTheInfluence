@@ -4,7 +4,7 @@
 // them.
 
 // FIXME: make this constant configurable
-let RADIUS_SCALE = 15;
+let RADIUS_SCALE = 25;
 
 let d3 = require('d3');
 let meetingData = require('./meetingData');
