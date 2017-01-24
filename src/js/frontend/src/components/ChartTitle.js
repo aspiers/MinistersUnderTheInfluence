@@ -6,12 +6,13 @@ import { Link } from 'react-router'
 let ChartTitle = React.createClass({
   propTypes: {
     sourceName: React.PropTypes.string,
+    targetType: React.PropTypes.string,
   },
 
   render: function() {
     let description = this.props.sourceName ?
         <p style={{width: "50%", display: "inline"}}>
-          Showing all meetings with {this.props.sourceName}
+          Showing all meetings of {this.props.targetType} with {this.props.sourceName}
         </p>
       : "";
 

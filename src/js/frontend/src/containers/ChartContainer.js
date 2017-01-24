@@ -16,6 +16,7 @@ class ChartContainer extends React.Component {
 
   render () {
     let sourceType = this.props.route.sourceType;
+    let targetType = this.props.params.targetType;
     let id = this.props.params.id;
     let entities = this.props.entities; // comes in via mapStateToProps
     let sourceData = entities && entities.get(sourceType);
@@ -23,11 +24,12 @@ class ChartContainer extends React.Component {
     let entityName = entityData && entityData.get("name");
 
     return <div className="chart-container">
-      <ChartTitle sourceName={entityName} />
+      <ChartTitle sourceName={entityName}
+                  targetType={targetType} />
       <Chart width="100%" height="100%"
              sourceType={sourceType}
              sourceId={id}
-             targetType={this.props.params.targetType} />
+             targetType={targetType} />
     </div>
   }
 
