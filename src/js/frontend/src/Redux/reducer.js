@@ -1,4 +1,4 @@
-import {Map as IMap, List as IList} from "immutable";
+import {combineReducers} from "redux";
 import * as actionTypes from "./action-types";
 
 // This tells redux-storage-decorator-immutablejs which bits of the
@@ -9,36 +9,14 @@ export const STRUCTURE = [
 ];
 
 ////////////////////////////////////////////////////////////////////////////////
-// root reducer
 
-// FIXME: switch to use combineReducers?
-// http://redux.js.org/docs/api/combineReducers.html
-
-export function rootReducer (state = IMap(), action) {
-  return state.merge({
-    showAboutScreen: aboutReducer(state.get("showAboutScreen", undefined),
-                                  action),
-    entities: addEntityReducer(state.get("entities"), action),
-  })
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// accountsy stuff
-
-// const defaultState = IMap({
-//   showAboutScreen: false,
-// });
-
-const defaultState = {
-  showAboutScreen: false,
-  entities: {
-    people: {},
-    organisations: {},
-    "government-offices": {},
-  },
+const DEFAULT_ENTITIES = {
+  people: {},
+  organisations: {},
+  "government-offices": {},
 };
 
-function aboutReducer(state = defaultState.showAboutScreen, {type}) {
+function aboutReducer(state = false, {type}) {
   switch (type) {
     case actionTypes.TOGGLE_ABOUT:
       return !state;
@@ -47,7 +25,7 @@ function aboutReducer(state = defaultState.showAboutScreen, {type}) {
   }
 }
 
-function addEntityReducer(state = defaultState.entities, action) {
+function addEntityReducer(state = DEFAULT_ENTITIES, action) {
   let {type, entityType, id, data} = action;
 
   switch (type) {
@@ -65,3 +43,8 @@ function addEntityReducer(state = defaultState.entities, action) {
       return state;
   }
 }
+
+export const rootReducer = combineReducers({
+  showAboutScreen: aboutReducer,
+  entities: addEntityReducer,
+});
