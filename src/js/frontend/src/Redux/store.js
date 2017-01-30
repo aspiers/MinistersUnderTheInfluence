@@ -27,16 +27,25 @@ const loggerMiddleware = createLogger({
 })
 
 // now create our redux store, applying all our middleware
-// const store = createStore(reducer, applyMiddleware(
-//   thunkMiddleware, // first, so function results get transformed
-//   loggerMiddleware, // now log everything at this state
-//   storageMiddleware // finally the storage middleware
-// ))
+const createStoreWithMiddleware = applyMiddleware(
+//  thunkMiddleware, // first, so function results get transformed
+  loggerMiddleware, // now log everything at this state
+  storageMiddleware // finally the storage middleware
+)
+// https://github.com/zalmoxisus/redux-devtools-extension
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// const composeEnhancers =
+//     process.env.NODE_ENV !== 'production' &&
+//     typeof window === 'object' &&
+//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+//       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+//         // Specify extension’s options like name, actionsBlacklist, actionsCreators or immutablejs support
+//       }) : compose;
 
 
 const store = createStore(
   reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  composeEnhancers(createStoreWithMiddleware)
 );
 
 module.exports = {store, engine};
