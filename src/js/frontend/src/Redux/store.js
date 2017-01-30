@@ -46,9 +46,16 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //         // Specify extension’s options like name, actionsBlacklist, actionsCreators or immutablejs support
 //       }) : compose;
 
+const initialState = {
+  showAboutScreen: false,
+  entities: {
+    dogs: {}
+  }
+};
 
 const store = createStore(
   reducer,
+  initialState,
   composeEnhancers(createStoreWithMiddleware)
 );
 
