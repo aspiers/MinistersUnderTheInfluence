@@ -1,11 +1,11 @@
-import immutableStorageDecorator from "./immutable-storage-decorator"
 import {createStore, applyMiddleware} from "redux"
 import thunkMiddleware from "redux-thunk"
 import createLogger from 'redux-logger'
-import {rootReducer} from "./reducer"
+import {rootReducer, STRUCTURE} from "./reducer"
 import * as storage from "redux-storage"
 import createEngine from "redux-storage-engine-localstorage"
 import storageDebounce from 'redux-storage-decorator-debounce'
+import immutablejs from 'redux-storage-decorator-immutablejs'
 
 ////////////////////////////////////////////////////////////////////////////////
 // redux stuff
@@ -16,7 +16,10 @@ const reducer = storage.reducer(rootReducer, (oldState, newState) => newState)
 
 // create a storage engine, with decorators to convert plain JS into Immutable
 // and "debounce" storage so it's not happening all the time
-const engine = storageDebounce(immutableStorageDecorator(createEngine("muti-frontend")), 2000)
+let engine = createEngine("muti-frontend");
+engine = storageDebounce(engine, 2000);
+engine = immutablejs(engine, STRUCTURE);
+
 // create storage middleware, which triggers a save action after every normal action
 const storageMiddleware = storage.createMiddleware(engine)
 // create logger middleware

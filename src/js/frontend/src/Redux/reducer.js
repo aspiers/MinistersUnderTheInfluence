@@ -1,6 +1,13 @@
 import {Map as IMap, List as IList} from "immutable";
 import * as actionTypes from "./action-types";
 
+// This tells redux-storage-decorator-immutablejs which bits of the
+// state tree to make immutable.
+export const STRUCTURE = [
+  ['showAboutScreen'],
+  ['entities'],
+];
+
 ////////////////////////////////////////////////////////////////////////////////
 // root reducer
 
