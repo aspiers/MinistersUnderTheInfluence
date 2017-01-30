@@ -30,7 +30,7 @@ function addEntityReducer(state = DEFAULT_ENTITIES, action) {
 
   switch (type) {
     case actionTypes.ADD_ENTITY:
-      if (!state.has(entityType)) {
+      if (!state["entityType"]) {
         console.error(`Received ADD_ENTITY action with invalid entity type ${entityType}`);
         return state;
       }
