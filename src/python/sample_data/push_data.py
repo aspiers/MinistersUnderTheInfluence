@@ -15,7 +15,8 @@ import simplejson
 from argparse import ArgumentParser
 
 
-BASE_API_URL = 'http://localhost:3000/api/v1'
+#BASE_API_URL = 'http://localhost:3000/api/v1'
+BASE_API_URL = 'http://localhost:9200/muti'
 
 
 CACHE = {
@@ -33,7 +34,7 @@ def pprint_json(json_data):
 
 def post_to_api_and_return_id(endpoint, data):
     url = '{0}/{1}'.format(BASE_API_URL, endpoint)
-    resp = requests.post(url, json=data, headers={'Content-Type': 'application/vnd.api+json'})
+    resp = requests.post(url, json=data, headers={'Content-Type': 'application/json'})
 
     if not resp.ok:
         print("POST %s failed:\n%d %s" % (url, resp.status_code, resp.reason))
@@ -237,7 +238,7 @@ def main():
                 continue
             if int(meeting_ref) < args.from_id or int(meeting_ref) > args.to_id:
                 continue
-            print(row)
+            #print(row)
             minister = row[1]
             role = row[2] # FIXME: not used yet
             department = row[3]
@@ -245,14 +246,27 @@ def main():
             org = row[6]
             rep = row[7]
             reason = row[8]
-            source_id = get_or_create_source_id(args.file)
-            meeting_id = get_or_create_meeting_id(meeting_ref, date_, reason, source_id, reader.line_num)
-            department_id = get_or_create_department_id(department) if department != "" else None
-            minister_id = get_or_create_person_id(minister) if minister != "" else None
-            organisation_id = get_or_create_organisation_id(org) if org != "" else None
-            rep_id = get_or_create_person_id(rep or 'Representative from {0}'.format(org))
-            create_minister_link(meeting_id, minister_id, department_id)
-            create_rep_link(meeting_id, rep_id, organisation_id)
+            json = {
+                "meetingId" : meeting_ref,
+                "minister" : minister,
+                "department" : department,
+                "organization" : org,
+                "reason" : reason,
+            }
+            #pprint_json(json)
+            post_to_api_and_return_id(
+                "meetings",
+                json
+            )
+
+            # source_id = get_or_create_source_id(args.file)
+            # meeting_id = get_or_create_meeting_id(meeting_ref, date_, reason, source_id, reader.line_num)
+            # department_id = get_or_create_department_id(department) if department != "" else None
+            # minister_id = get_or_create_person_id(minister) if minister != "" else None
+            # organisation_id = get_or_create_organisation_id(org) if org != "" else None
+            # rep_id = get_or_create_person_id(rep or 'Representative from {0}'.format(org))
+            # create_minister_link(meeting_id, minister_id, department_id)
+            # create_rep_link(meeting_id, rep_id, organisation_id)
             count += 1
 
     print("%d rows processed" % count)
